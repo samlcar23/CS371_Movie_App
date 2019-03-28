@@ -2,32 +2,44 @@
   <div>
     <v-container fluid grid-list-md class="py-4 mx-0">
       <v-layout row wrap justify-center>
+        <!-- <p>{{nowPlayingMovies[0]}}</p> -->
         <template v-for="(movie, index) in nowPlayingMovies">
           <v-flex :key="index" xs11 sm5 md2 lg2 xl2>
-            <v-card dark color="primary">
+            <v-card dark color="primary" @click="movieDetails(movie)">
               <v-img :src="movie.poster"></v-img>
-              <v-card-text>{{movie.title}} <WatchCounter></WatchCounter></v-card-text>
+              <v-card-text>
+                {{movie.title}}
+                <WatchCounter></WatchCounter>
+              </v-card-text>
             </v-card>
           </v-flex>
         </template>
+      </v-layout>
+      <v-layout row wrap justify-center>
+        <v-flex>
+          <MoviePopup :movie="selectedMovie"></MoviePopup>
+        </v-flex>
       </v-layout>
     </v-container>
   </div>
 </template>
 
 <script>
-import WatchCounter from '../components/WatchCounter.vue';
+import WatchCounter from "../components/WatchCounter.vue";
+import MoviePopup from "../components/MoviePopup.vue";
 export default {
   mounted() {
     this.getNowPlaying();
   },
-  components:{
-    WatchCounter
+  components: {
+    WatchCounter,
+    MoviePopup
   },
   data() {
     return {
       nowPlaying: [],
-      nowPlayingMovies: []
+      nowPlayingMovies: [],
+      selectedMovie: {}
     };
   },
   methods: {
@@ -49,11 +61,14 @@ export default {
       //console.log(key + " -- " + path);
       fetch(`https://image.tmdb.org/t/p/w500${obj.poster_path}`).then(r => {
         this.nowPlayingMovies.push({
-          title: obj.title,
-          overview: obj.overview,
+          ...obj,
           poster: r.url
         });
       });
+    },
+
+    movieDetails(movie){
+      this.selectedMovie={...movie};
     }
   }
 };
