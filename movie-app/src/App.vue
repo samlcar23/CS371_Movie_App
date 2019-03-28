@@ -55,6 +55,17 @@
       <v-content>
         <router-view/>
       </v-content>
+
+      <!-- footer -->
+      <v-footer class="text-md-center">
+        <v-spacer></v-spacer>
+        <span class="body-1">&nbsp;Copyright&nbsp;</span>
+        <div>&copy; {{ new Date().getFullYear() }}&nbsp;</div>
+        <span class="body-1">&nbsp;|&nbsp;</span>
+        <span class="body-1">PremierRent.&nbsp;</span>
+        <span class="body-1">All Rights Reserved.</span>
+        <v-spacer></v-spacer>
+      </v-footer>
     </div>
   </v-app>
 </template>
