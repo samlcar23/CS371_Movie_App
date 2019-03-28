@@ -1,9 +1,10 @@
 <template>
   <div>
+    <v-breadcrumbs class="ml-4" :items="navPath" divider=">"></v-breadcrumbs>
     <v-container fluid grid-list-md class="py-4 mx-0">
       <v-layout row wrap justify-center>
         <!-- <p>{{nowPlayingMovies[0]}}</p> -->
-        <template v-for="(movie, index) in nowPlayingMovies">
+        <template v-for="(movie, index) in $root.movieList">
           <v-flex :key="index" xs11 sm5 md2 lg2 xl2>
             <v-card dark color="primary" @click="movieDetails(movie)">
               <v-img :src="movie.poster"></v-img>
@@ -29,7 +30,7 @@ import WatchCounter from "../components/WatchCounter.vue";
 import MoviePopup from "../components/MoviePopup.vue";
 export default {
   mounted() {
-    this.getNowPlaying();
+    if (this.$root.movieList.length <= 0) this.getNowPlaying();
   },
   components: {
     WatchCounter,
@@ -38,8 +39,14 @@ export default {
   data() {
     return {
       nowPlaying: [],
-      nowPlayingMovies: [],
-      selectedMovie: {}
+      selectedMovie: {},
+      navPath: [
+      {
+        text: "Home",
+        disabled: true,
+        to: "/"
+      }
+    ]
     };
   },
   methods: {
@@ -58,17 +65,17 @@ export default {
         });
     },
     getImages(obj) {
-      //console.log(key + " -- " + path);
+      this.$root.movieList = [];
       fetch(`https://image.tmdb.org/t/p/w500${obj.poster_path}`).then(r => {
-        this.nowPlayingMovies.push({
+        this.$root.movieList.push({
           ...obj,
           poster: r.url
         });
       });
     },
 
-    movieDetails(movie){
-      this.selectedMovie={...movie};
+    movieDetails(movie) {
+      this.selectedMovie = { ...movie };
     }
   }
 };

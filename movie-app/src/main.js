@@ -10,6 +10,9 @@ Vue.use(Vuetify)
 Vue.config.productionTip = false
 
 new Vue({
+  data: {
+    movieList: []
+  },
   router,
   render: h => h(App)
 }).$mount('#app')
