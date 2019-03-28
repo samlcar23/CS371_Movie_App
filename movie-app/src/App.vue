@@ -10,7 +10,7 @@
           ></v-toolbar-side-icon>-->
 
           <v-toolbar-title class="headline text-uppercase">
-            <span class="noBackground">PremierRent</span>
+            <span class="noBackground" @click="$router.push({ path: `/` })">PremierRent</span>
           </v-toolbar-title>
           <v-spacer></v-spacer>
 
