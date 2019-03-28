@@ -46,7 +46,8 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="#1176c4" flat @click="dialog=false">Close</v-btn>
-              <v-btn :loading="saveLoading" color="primary" flat>Rent</v-btn>
+              <v-btn v-if="!$root.loggedIn" @click="$root.loggedIn=true" color="primary" flat>Log In</v-btn>
+              <v-btn v-if="$root.loggedIn" :loading="saveLoading" color="primary" flat>Rent</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>

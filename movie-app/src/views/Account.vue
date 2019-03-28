@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$root.loggedIn">
     <v-breadcrumbs class="ml-4" :items="navPath" divider=">"></v-breadcrumbs>
     <v-container fluid grid-list-md class="pt-0 pb-4 mx-0">
       <v-layout row wrap>
@@ -32,6 +32,9 @@
       </v-layout>
       <MoviePopup :movie="selectedMovie"></MoviePopup>
     </v-container>
+  </div>
+  <div v-else>
+    <h2 class="movieDescriptionHeader">Please login to see account information</h2>
   </div>
 </template>
 
@@ -93,16 +96,4 @@ export default {
 </script>
 
 <style>
-.card {
-  background-color: #fff;
-  min-width: 100%;
-  max-height: 400px;
-  display: flex;
-  overflow-x: auto;
-}
-.card--content {
-  background-color: #e74c3c;
-  max-width: 267px;
-  margin: 5px;
-}
 </style>

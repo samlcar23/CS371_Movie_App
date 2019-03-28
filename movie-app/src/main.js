@@ -1,18 +1,19 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
-require('./assets/style.css');
+import Vue from "vue";
+import App from "./App.vue";
+import router from "./router";
+import Vuetify from "vuetify";
+import "vuetify/dist/vuetify.min.css";
+require("./assets/style.css");
 
-Vue.use(Vuetify)
+Vue.use(Vuetify);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   data: {
-    movieList: []
+    movieList: [],
+    loggedIn: true
   },
   router,
   render: h => h(App)
-}).$mount('#app')
+}).$mount("#app");
