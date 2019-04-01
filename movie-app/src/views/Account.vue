@@ -10,7 +10,7 @@
           <section class="card">
             <template v-for="(movie,index) in $root.movieList">
               <div :key="index" class="card--content my-0">
-                <img height="350px" :src="movie.poster">
+                <img height="350px" :src="movie.poster" @click="movieDetails(movie)">
               </div>
             </template>
           </section>

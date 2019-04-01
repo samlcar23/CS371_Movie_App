@@ -34,6 +34,22 @@
                     <v-icon right size="18px">star</v-icon>
                   </p>
                 </v-flex>
+                <v-flex xs12>
+                  <h2 class="movieDescriptionHeader">Trailer</h2>
+                  <p>
+                      <template v-for="item in trailers">
+                        <ul id="example-1">
+                        <li v-if="item.type === 'trailer'">
+                          <iframe width="420" height="315"
+                          :src="`https://www.youtube.com/embed/${item.key}`">
+                          </iframe>
+                          {{item.type}}
+                        </li>
+                      </ul>
+                    </template>
+                    <v-icon right size="18px">star</v-icon>
+                  </p>
+                </v-flex>
               </v-layout>
             </v-container>
           </v-card>
@@ -63,8 +79,12 @@ export default {
     movie(val) {
       this.activeMovie = val;
       this.dialog = true;
+      this.getTrailer(this.activeMovie.id);
     }
   },
+  // mounted() {
+  //   if (this.trailers.length <= 0 && this.activeMovie.length > 0) this.getTrailer(this.activeMovie.id);
+  // },
 
   data: () => ({
     dialog: false,
@@ -74,7 +94,22 @@ export default {
     currentDialogItem: {},
     editableDialog: false,
     usersCalculated: false,
-    saveLoading: false
-  })
+    saveLoading: false,
+    trailers: []
+  }),
+  methods: {
+    getTrailer(id) {
+      console.log("request trailer");
+      fetch(
+        //bbd53a03bcbbff4022afbfd11ffa06a3
+        `https://api.themoviedb.org/3/movie/${id}/videos?api_key=bbd53a03bcbbff4022afbfd11ffa06a3&language=en-US`
+      )
+        .then(r => r.json())
+        .then(u => {
+          console.log(u);
+          this.trailers = u.results;
+        })
+    }
+  }
 };
 </script>
