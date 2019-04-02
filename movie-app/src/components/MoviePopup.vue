@@ -63,7 +63,7 @@
               <v-spacer></v-spacer>
               <v-btn color="#1176c4" flat @click="dialog=false">Close</v-btn>
               <v-btn v-if="!$root.loggedIn" @click="$root.loggedIn=true" color="primary" flat>Log In</v-btn>
-              <v-btn v-if="$root.loggedIn" :loading="saveLoading" color="primary" flat>Rent</v-btn>
+              <v-btn v-if="$root.loggedIn" :loading="saveLoading" color="primary" flat @click="rent">Rent</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -72,7 +72,12 @@
   </v-dialog>
 </template>
 
+
 <script>
+
+import { db } from "../config/db.js";
+
+
 export default {
   props: ["movie"],
   watch: {
@@ -82,9 +87,6 @@ export default {
       this.getTrailer(this.activeMovie.id);
     }
   },
-  // mounted() {
-  //   if (this.trailers.length <= 0 && this.activeMovie.length > 0) this.getTrailer(this.activeMovie.id);
-  // },
 
   data: () => ({
     dialog: false,
@@ -99,16 +101,25 @@ export default {
   }),
   methods: {
     getTrailer(id) {
-      console.log("request trailer");
       fetch(
         //bbd53a03bcbbff4022afbfd11ffa06a3
         `https://api.themoviedb.org/3/movie/${id}/videos?api_key=bbd53a03bcbbff4022afbfd11ffa06a3&language=en-US`
       )
         .then(r => r.json())
         .then(u => {
-          console.log(u);
           this.trailers = u.results;
         })
+    },
+    rent() {
+      
+      //atomically increments the firebase view counter
+      var r = db.ref("views/" + this.activeMovie.id).child("count");
+      r.transaction(function(currentViews) {
+        return currentViews + 1;
+      });
+
+      //TODO: complete rent action ie. Play trailer
+      
     }
   }
 };

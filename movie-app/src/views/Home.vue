@@ -10,7 +10,7 @@
               <v-img :src="movie.poster"></v-img>
               <v-card-text>
                 {{movie.title}}
-                <WatchCounter></WatchCounter>
+                <WatchCounter :movieId="movie.id"></WatchCounter>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -26,8 +26,11 @@
 </template>
 
 <script>
+
 import WatchCounter from "../components/WatchCounter.vue";
 import MoviePopup from "../components/MoviePopup.vue";
+
+
 export default {
   mounted() {
     if (this.$root.movieList.length <= 0) this.getNowPlaying();
@@ -76,7 +79,8 @@ export default {
 
     movieDetails(movie) {
       this.selectedMovie = { ...movie };
-    }
+    },
+
   }
 };
 </script>
