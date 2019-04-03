@@ -37,17 +37,9 @@
                 <v-flex xs12>
                   <h2 class="movieDescriptionHeader">Trailer</h2>
                   <p>
-                      <template v-for="item in trailers">
-                        <ul id="example-1">
-                        <li v-if="item.type === 'trailer'">
-                          <iframe width="420" height="315"
-                          :src="`https://www.youtube.com/embed/${item.key}`">
-                          </iframe>
-                          {{item.type}}
-                        </li>
-                      </ul>
-                    </template>
-                    <v-icon right size="18px">star</v-icon>
+                    <iframe width="420" height="315"
+                      :src="`https://www.youtube.com/embed/${trailer.key}`">
+                    </iframe>
                   </p>
                 </v-flex>
               </v-layout>
@@ -87,6 +79,9 @@ export default {
       this.getTrailer(this.activeMovie.id);
     }
   },
+  mounted() {
+    this.trailer = "";
+  },
 
   data: () => ({
     dialog: false,
@@ -97,7 +92,7 @@ export default {
     editableDialog: false,
     usersCalculated: false,
     saveLoading: false,
-    trailers: []
+    trailer: ""
   }),
   methods: {
     getTrailer(id) {
@@ -107,7 +102,9 @@ export default {
       )
         .then(r => r.json())
         .then(u => {
-          this.trailers = u.results;
+          this.trailer = u.results.find(function(element) {
+              return (element.type == "Trailer");
+          });
         })
     },
     rent() {
