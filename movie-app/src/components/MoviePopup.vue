@@ -79,9 +79,6 @@ export default {
       this.getTrailer(this.activeMovie.id);
     }
   },
-  mounted() {
-    this.trailer = "";
-  },
 
   data: () => ({
     dialog: false,
