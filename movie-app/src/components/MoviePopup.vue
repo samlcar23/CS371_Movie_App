@@ -67,7 +67,7 @@
 
 <script>
 
-import { db, login, addRent, getRentedMovies } from "../config/db.js";
+import { db, login, addRent, getRentedOut } from "../config/db.js";
 
 login();
 export default {
@@ -117,6 +117,7 @@ export default {
     },
     addMovie(id) {
       addRent(id);
+      getRentedOut();
     }
   }
 };

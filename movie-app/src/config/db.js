@@ -20,7 +20,7 @@ function addUser(userName){
     let exist = false;
     //addRented(4312,"test");
     //deleteRent(4312);
-
+    getRentedOut();
     userRef.once("value", function(snapshot) {
       jsonObj = snapshot.toJSON();
       console.log(jsonObj);
@@ -40,8 +40,8 @@ function addUser(userName){
           googleUID: guid,
           name: userName,
           //movies: {foo:{counter:1}}
-          rented: ["start"],
-          favorites: ["start"]
+          rented: ["start"]
+          
         });
       }
     });
@@ -102,7 +102,7 @@ export function deleteRent(movieID){
 		});
   }
 
-  export function getRentedMovies(){
+  export function getUserRented(){
     let getMoviesRef = db.ref().child("users/"+guid+"/rented");
     let jsonObj;
 
@@ -111,6 +111,34 @@ export function deleteRent(movieID){
       //console.log(jsonObj);
       return jsonObj;
       });
+  }
+
+  export function getRentedOut(){
+    let getRented = db.ref().child("users");
+    let jsonObj;
+    let movieCounter = 0;
+    let size;
+    let userCounter = 0;
+
+    getRented.once("value", function(snapshot){
+      jsonObj = snapshot.toJSON();
+      //console.log(jsonObj);
+      Object.keys(jsonObj).forEach(function(key,index) {
+        //console.log(jsonObj[key].rented);
+        Object.keys(jsonObj[key].rented).forEach(function(key2,index2) {
+          console.log(jsonObj[key].rented[key2]);
+          movieCounter = movieCounter + 1;
+        });
+        size = Object.keys(jsonObj).length;
+        userCounter = userCounter + 1;
+        if (userCounter == size) {
+          movieCounter = movieCounter - userCounter;
+          console.log("Total rented out: " + movieCounter);
+          return movieCounter;
+        }
+      });
+    })
+    
   }
 
   export function login(){
