@@ -44,6 +44,8 @@ function addUser(userName){
     //dateTest();
     //signout();
     //getUserRented();
+    //addRent(123,20);
+    deleteRent(123);
     userRef.once("value", function(snapshot) {
       if (guid != null){
       jsonObj = snapshot.toJSON();
@@ -149,7 +151,7 @@ export function deleteRent(movieID){
 			jsonObj = snapshot.toJSON();
       //console.log(jsonObj);
       Object.keys(jsonObj).forEach(function(key,index) {
-        if(jsonObj[key] == movieID){
+        if(jsonObj[key].mID == movieID){
           console.log("target found");
           removed = true;
           db.ref("users/"+guid+"/currentRentals/"+key).remove();
