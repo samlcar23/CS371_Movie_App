@@ -34,14 +34,18 @@ function dateFuture(numDays){
 }
 
 function addUser(userName){
+  
     let userRef = db.ref().child("users");
     let jsonObj;
     let exist = false;
     //addRented(4312,"test");
     //deleteRent(4312);
     //addRent();
-    dateTest();
+    //dateTest();
+    //signout();
+    getUserRented();
     userRef.once("value", function(snapshot) {
+      if (guid != null){
       jsonObj = snapshot.toJSON();
       console.log(jsonObj);
       for(let i in jsonObj){
@@ -65,11 +69,13 @@ function addUser(userName){
           
         });
       }
+    }
     });
-    
+  
   }
   //Add movie to the users rental
 export function addRent(movieID){
+  if (guid != null){
     let rentedRef = db.ref().child("users/"+guid+"/currentRentals");
     let jsonObj;
     let duplicate = false;
@@ -98,10 +104,44 @@ export function addRent(movieID){
         db.ref("users/"+guid+"/currentRentals").update(array);
       }
 		});
-		
+  }
+  }
+   //Add past movie
+export function addPast(movieID){
+  if (guid != null){
+    let pastRef = db.ref().child("users/"+guid+"/pastRentals");
+    let jsonObj;
+    let duplicate = false;
+    let array;
+    let newKey;
+
+		pastRef.once("value", function(snapshot) {
+			jsonObj = snapshot.toJSON();
+      //console.log(jsonObj);
+      Object.keys(jsonObj).forEach(function(key,index) {
+        if(jsonObj[key].mID == movieID){
+          //console.log("duplicate found");
+          duplicate = true;
+        }
+        newKey = parseInt(key,10) + 1;
+      });
+      
+      if(duplicate){
+        console.log("Already in past rental");
+        return;
+      }
+      else{
+        array = jsonObj;
+        newKey = newKey.toString();
+        array[newKey] = {mID:movieID,start:dateToday(),end:dateFuture(30)};
+        db.ref("users/"+guid+"/pastRentals").update(array);
+      }
+		});
+  }
   }
   //Delete a movie for current logged in user
 export function deleteRent(movieID){
+  if (guid != null){
     let deleteRef = db.ref().child("users/"+guid+"/currentRentals");
     let jsonObj;
     let removed = false;
@@ -123,21 +163,64 @@ export function deleteRent(movieID){
       else{
         console.log("wasn't deleted. Perhaps doesnt exists?");
       }
-		});
+    });
+  }
+  }
+  //Delete a movie for current logged in user
+export function deletePast(movieID){
+  if (guid != null){
+    let deletePastRef = db.ref().child("users/"+guid+"/pastRentals");
+    let jsonObj;
+    let removed = false;
+    deletePastRef.once("value", function(snapshot) {
+			jsonObj = snapshot.toJSON();
+      //console.log(jsonObj);
+      Object.keys(jsonObj).forEach(function(key,index) {
+        if(jsonObj[key] == movieID){
+          console.log("target found");
+          removed = true;
+          db.ref("users/"+guid+"/pastRentals/"+key).remove();
+        }
+      });
+      
+      if(removed){
+        console.log("deleted");
+        return;
+      }
+      else{
+        console.log("wasn't deleted. Perhaps doesnt exists?");
+      }
+    });
+  }
   }
   //get the current users rented movies in a json object
   export function getUserRented(){
+    if (guid != null){
     let getMoviesRef = db.ref().child("users/"+guid+"/currentRentals");
     let jsonObj;
 
     getMoviesRef.once("value", function(snapshot) {
 			jsonObj = snapshot.toJSON();
+      console.log(jsonObj);
+      return jsonObj;
+      });
+    }
+  }
+  export function getUserPast(){
+    if (guid != null){
+    let getPastRef = db.ref().child("users/"+guid+"/pastRentals");
+    let jsonObj;
+
+    getPastRef.once("value", function(snapshot) {
+			jsonObj = snapshot.toJSON();
       //console.log(jsonObj);
       return jsonObj;
       });
+    }
   }
 //Get total movies rented out for all users
   export function getRentedOut(){
+    if (guid != null){
     let getRented = db.ref().child("users");
     let jsonObj;
     let movieCounter = 0;
@@ -162,7 +245,7 @@ export function deleteRent(movieID){
         }
       });
     })
-    
+  }
   }
 
   export function login(){
@@ -195,5 +278,16 @@ export function deleteRent(movieID){
     });
   
   
+  }
+
+  function signout(){
+    firebase.auth().signOut().then(function() {
+      // Sign-out successful.
+      console.log("Signed out?");
+      guid = null;
+    }, function(error) {
+      // An error happened.
+      console.log("Error signing out: "+error);
+    });
   }
 
