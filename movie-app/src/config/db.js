@@ -13,6 +13,25 @@ firebase.initializeApp(config);
 export const db = firebase.database();
 var guid;
 
+function dateToday(){
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+  today = yyyy + '/' + mm + '/' + dd;
+  //console.log(today);
+  return today;
+}
+function dateFuture(numDays){
+  var future = new Date();
+  future.setDate(future.getDate() + numDays);
+  var ddF = String(future.getDate()).padStart(2, '0');
+  var mmF = String(future.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyyF = future.getFullYear();
+  future = yyyyF + '/' + mmF + '/' + ddF;
+  //console.log(future);
+  return future;
+}
 
 function addUser(userName){
     let userRef = db.ref().child("users");
@@ -20,7 +39,8 @@ function addUser(userName){
     let exist = false;
     //addRented(4312,"test");
     //deleteRent(4312);
-    getRentedOut();
+    //addRent();
+    dateTest();
     userRef.once("value", function(snapshot) {
       jsonObj = snapshot.toJSON();
       console.log(jsonObj);
@@ -40,24 +60,27 @@ function addUser(userName){
           googleUID: guid,
           name: userName,
           //movies: {foo:{counter:1}}
-          rented: ["start"]
+          currentRentals: ["start"],
+          pastRentals: ["start"]
           
         });
       }
     });
     
   }
+  //Add movie to the users rental
 export function addRent(movieID){
-    let rentedRef = db.ref().child("users/"+guid+"/rented");
+    let rentedRef = db.ref().child("users/"+guid+"/currentRentals");
     let jsonObj;
     let duplicate = false;
     let array;
     let newKey;
+
 		rentedRef.once("value", function(snapshot) {
 			jsonObj = snapshot.toJSON();
       //console.log(jsonObj);
       Object.keys(jsonObj).forEach(function(key,index) {
-        if(jsonObj[key] == movieID){
+        if(jsonObj[key].mID == movieID){
           //console.log("duplicate found");
           duplicate = true;
         }
@@ -71,14 +94,15 @@ export function addRent(movieID){
       else{
         array = jsonObj;
         newKey = newKey.toString();
-        array[newKey] = movieID;
-        db.ref("users/"+guid+"/rented").update(array);
+        array[newKey] = {mID:movieID,start:dateToday(),end:dateFuture(30)};
+        db.ref("users/"+guid+"/currentRentals").update(array);
       }
 		});
 		
   }
+  //Delete a movie for current logged in user
 export function deleteRent(movieID){
-    let deleteRef = db.ref().child("users/"+guid+"/rented");
+    let deleteRef = db.ref().child("users/"+guid+"/currentRentals");
     let jsonObj;
     let removed = false;
     deleteRef.once("value", function(snapshot) {
@@ -88,7 +112,7 @@ export function deleteRent(movieID){
         if(jsonObj[key] == movieID){
           console.log("target found");
           removed = true;
-          db.ref("users/"+guid+"/rented/"+key).remove();
+          db.ref("users/"+guid+"/currentRentals/"+key).remove();
         }
       });
       
@@ -101,9 +125,9 @@ export function deleteRent(movieID){
       }
 		});
   }
-
+  //get the current users rented movies in a json object
   export function getUserRented(){
-    let getMoviesRef = db.ref().child("users/"+guid+"/rented");
+    let getMoviesRef = db.ref().child("users/"+guid+"/currentRentals");
     let jsonObj;
 
     getMoviesRef.once("value", function(snapshot) {
@@ -112,21 +136,21 @@ export function deleteRent(movieID){
       return jsonObj;
       });
   }
-
+//Get total movies rented out for all users
   export function getRentedOut(){
     let getRented = db.ref().child("users");
     let jsonObj;
     let movieCounter = 0;
     let size;
     let userCounter = 0;
-
+    //change to on?
     getRented.once("value", function(snapshot){
       jsonObj = snapshot.toJSON();
       //console.log(jsonObj);
       Object.keys(jsonObj).forEach(function(key,index) {
         //console.log(jsonObj[key].rented);
-        Object.keys(jsonObj[key].rented).forEach(function(key2,index2) {
-          console.log(jsonObj[key].rented[key2]);
+        Object.keys(jsonObj[key].currentRentals).forEach(function(key2,index2) {
+          console.log(jsonObj[key].currentRentals[key2]);
           movieCounter = movieCounter + 1;
         });
         size = Object.keys(jsonObj).length;
