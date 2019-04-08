@@ -116,8 +116,8 @@ export default {
       
     },
     addMovie(id) {
-      addRent(id);
-      getRentedOut();
+      addRent(id,30);
+      
     }
   }
 };
