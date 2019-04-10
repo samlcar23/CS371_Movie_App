@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Account from './views/Account.vue'
+import Play from './views/Play.vue'
 
 Vue.use(Router)
 
@@ -18,6 +19,12 @@ export default new Router({
       path: '/account',
       name: 'account',
       component: Account
+    },
+    {
+      path: '/play/:trailerKey',
+      name: 'play',
+      props: true,
+      component: Play
     }
   ]
 })

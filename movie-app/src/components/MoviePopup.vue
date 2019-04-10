@@ -34,14 +34,6 @@
                     <v-icon right size="18px">star</v-icon>
                   </p>
                 </v-flex>
-                <v-flex xs12>
-                  <h2 class="movieDescriptionHeader">Trailer</h2>
-                  <p>
-                    <iframe width="420" height="315"
-                      :src="`https://www.youtube.com/embed/${trailer.key}`">
-                    </iframe>
-                  </p>
-                </v-flex>
               </v-layout>
             </v-container>
           </v-card>
@@ -54,7 +46,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="#1176c4" flat @click="dialog=false">Close</v-btn>
-              <v-btn v-if="!$root.loggedIn" @click="$root.loggedIn=true" color="primary" flat>Log In</v-btn>
+              <v-btn v-if="!$root.loggedIn" color="primary" @click="$root.loggedIn=true;" flat>Log In</v-btn>
               <v-btn v-if="$root.loggedIn" :loading="saveLoading" color="primary" flat @click="rent">Rent</v-btn>
             </v-card-actions>
           </v-card>
@@ -113,8 +105,14 @@ export default {
       });
 
       //TODO: complete rent action ie. Play trailer
+      this.$router.push({ 
+        name: 'play',
+        params: {
+        trailerKey: this.trailer.key
+        }
+      });
       
-    }
+    },
   }
 };
 </script>
