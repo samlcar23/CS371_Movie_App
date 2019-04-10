@@ -1,0 +1,18 @@
+.navButtons {
+  font-family: Roboto;
+}
+.movieDescriptionHeader {
+  font-weight: normal;
+}
+.card {
+  background-color: #fff;
+  min-width: 100%;
+  max-height: 400px;
+  display: flex;
+  overflow-x: auto;
+}
+.card--content {
+  background-color: #e74c3c;
+  max-width: 267px;
+  margin: 5px;
+}
