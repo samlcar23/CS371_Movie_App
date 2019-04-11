@@ -103,6 +103,11 @@ export default {
           this.$root.activeRentals = classify[0];
           this.$root.pastRentals = classify[1];
         });
+        var childListener = rentedRef.on("child_changed", snapshot => {
+          var classify = classifyRentals(this.$root.user.uid);
+          this.$root.activeRentals = classify[0];
+          this.$root.pastRentals = classify[1];
+        });
       }
     } else {
       firebase
@@ -139,6 +144,11 @@ export default {
             this.$root.pastRentals = classify[1];
           });
           var childListener = rentedRef.on("child_removed", snapshot => {
+            var classify = classifyRentals(this.$root.user.uid);
+            this.$root.activeRentals = classify[0];
+            this.$root.pastRentals = classify[1];
+          });
+          var childListener = rentedRef.on("child_changed", snapshot => {
             var classify = classifyRentals(this.$root.user.uid);
             this.$root.activeRentals = classify[0];
             this.$root.pastRentals = classify[1];
