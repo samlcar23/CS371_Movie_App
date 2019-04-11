@@ -46,8 +46,21 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="#1176c4" flat @click="dialog=false">Close</v-btn>
-              <v-btn v-if="!$root.loggedIn" color="primary" @click="$root.loggedIn=true;" flat>Log In</v-btn>
-              <v-btn v-if="$root.loggedIn" :loading="saveLoading" color="primary" flat @click="rent">Rent</v-btn>
+              <v-btn v-if="!$root.loggedIn" color="primary" @click="handleLogin" flat>Log In</v-btn>
+              <v-btn
+                v-if="$root.loggedIn && !$root.activeRentals.includes(activeMovie.id)"
+                :loading="saveLoading"
+                color="primary"
+                flat
+                @click="rent"
+              >Rent</v-btn>
+              <v-btn
+                v-if="$root.loggedIn && $root.activeRentals.includes(activeMovie.id)"
+                :loading="saveLoading"
+                color="primary"
+                flat
+                @click="watch"
+              >Watch</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -58,9 +71,7 @@
 
 
 <script>
-
-import { db } from "../config/db.js";
-
+import { db, login, addRent, classifyRentals } from "../config/db.js";
 
 export default {
   props: ["movie"],
@@ -92,27 +103,40 @@ export default {
         .then(r => r.json())
         .then(u => {
           this.trailer = u.results.find(function(element) {
-              return (element.type == "Trailer");
+            return element.type == "Trailer";
           });
-        })
+        });
     },
     rent() {
-      
       //atomically increments the firebase view counter
       var r = db.ref("views/" + this.activeMovie.id).child("count");
       r.transaction(function(currentViews) {
         return currentViews + 1;
       });
 
+      addRent(this.activeMovie.id, this.$root.user.uid);
+
       //TODO: complete rent action ie. Play trailer
-      this.$router.push({ 
-        name: 'play',
+      this.$router.push({
+        name: "play",
         params: {
-        trailerKey: this.trailer.key
+          trailerKey: this.trailer.key
         }
       });
-      
     },
+
+    watch() {
+      this.$router.push({
+        name: "play",
+        params: {
+          trailerKey: this.trailer.key          
+        }
+      });
+    },
+
+    handleLogin() {
+      login();
+    }
   }
 };
 </script>

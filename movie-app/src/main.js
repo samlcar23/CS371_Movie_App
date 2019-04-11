@@ -14,7 +14,10 @@ Vue.config.productionTip = false;
 new Vue({
   data: {
     movieList: [],
-    loggedIn: true
+    loggedIn: false,
+    user: null,
+    activeRentals: [],
+    pastRentals: []
   },
   router,
   render: h => h(App)

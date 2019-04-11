@@ -9,9 +9,11 @@
         <v-flex xs12 class="py-0">
           <section class="card">
             <template v-for="(movie,index) in $root.movieList">
-              <div :key="index" class="card--content my-0">
-                <img height="350px" :src="movie.poster" @click="movieDetails(movie)">
-              </div>
+              <template v-if="$root.activeRentals.includes(movie.id)">
+                <div :key="index" class="card--content my-0">
+                  <img height="350px" :src="movie.poster" @click="movieDetails(movie)">
+                </div>
+              </template>
             </template>
           </section>
         </v-flex>
@@ -23,9 +25,11 @@
         <v-flex xs12 class="py-0">
           <section class="card">
             <template v-for="(movie,index) in $root.movieList">
-              <div :key="index" class="card--content my-0">
-                <img height="350px" :src="movie.poster" @click="movieDetails(movie)">
-              </div>
+              <template v-if="$root.pastRentals.includes(movie.id)">
+                <div :key="index" class="card--content my-0">
+                  <img height="350px" :src="movie.poster" @click="movieDetails(movie)">
+                </div>
+              </template>
             </template>
           </section>
         </v-flex>
@@ -34,12 +38,27 @@
     </v-container>
   </div>
   <div v-else>
-    <h2 class="movieDescriptionHeader">Please login to see account information</h2>
+    <v-container>
+      <v-layout row wrap>
+        <v-flex xs12>
+          <h2
+            style="text-align:center"
+            class="movieDescriptionHeader pt-2"
+          >Please login to see account information</h2>
+        </v-flex>
+        <v-flex xs12>
+          <div class="text-xs-center pt-2">
+            <v-btn @click="handleLogin()">Login</v-btn>
+          </div>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 
 <script>
 import MoviePopup from "../components/MoviePopup.vue";
+import { login } from "../config/db";
 
 export default {
   mounted() {
@@ -74,6 +93,10 @@ export default {
     },
     movieDetails(movie) {
       this.selectedMovie = { ...movie };
+    },
+
+    handleLogin() {
+      login();
     }
   },
   data: () => ({
