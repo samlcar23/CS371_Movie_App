@@ -76,11 +76,21 @@ import firebase from "firebase";
 
 export default {
   name: "App",
-  data: () => ({}),
+  data: () => ({
+    timer: null
+  }),
 
   watch: {},
 
   computed: {},
+
+  created: function() {
+    this.timer = setInterval(this.fetchMovieClassification, 300000);
+  },
+
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
 
   mounted() {
     if (sessionStorage.user) {
@@ -122,6 +132,14 @@ export default {
   methods: {
     loginApp() {
       login();
+    },
+
+    fetchMovieClassification() {
+      if (this.$root.user != null) {
+        var classify = classifyRentals(this.$root.user.uid);
+        this.$root.activeRentals = classify[0];
+        this.$root.pastRentals = classify[1];
+      }
     },
 
     setLogin(result) {
