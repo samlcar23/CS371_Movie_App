@@ -1,6 +1,6 @@
 <template>
   <!-- EDITABLE POPUP WINDOW FOR MOVIE DATA -->
-  <v-dialog v-model="dialog" persistent max-width="800px">
+  <v-dialog v-model="dialog" max-width="800px">
     <template>
       <v-alert v-model="dialogError" dismissible type="error">{{dialogErrorMsg}}</v-alert>
       <v-layout row wrap>
@@ -59,7 +59,7 @@
                 :loading="saveLoading"
                 color="primary"
                 flat
-                @click="watch"
+                @click="watchMovie"
               >Watch</v-btn>
             </v-card-actions>
           </v-card>
@@ -79,7 +79,6 @@ export default {
     movie(val) {
       this.activeMovie = val;
       this.dialog = true;
-      this.getTrailer(this.activeMovie.id);
     }
   },
 
@@ -91,22 +90,10 @@ export default {
     currentDialogItem: {},
     editableDialog: false,
     usersCalculated: false,
-    saveLoading: false,
-    trailer: ""
+    saveLoading: false
   }),
   methods: {
-    getTrailer(id) {
-      fetch(
-        //bbd53a03bcbbff4022afbfd11ffa06a3
-        `https://api.themoviedb.org/3/movie/${id}/videos?api_key=bbd53a03bcbbff4022afbfd11ffa06a3&language=en-US`
-      )
-        .then(r => r.json())
-        .then(u => {
-          this.trailer = u.results.find(function(element) {
-            return element.type == "Trailer";
-          });
-        });
-    },
+    
     rent() {
       //atomically increments the firebase view counter
       var r = db.ref("views/" + this.activeMovie.id).child("count");
@@ -120,16 +107,16 @@ export default {
       this.$router.push({
         name: "play",
         params: {
-          trailerKey: this.trailer.key
+          movieId: this.activeMovie.id.toString()
         }
       });
     },
 
-    watch() {
+    watchMovie() {
       this.$router.push({
         name: "play",
         params: {
-          trailerKey: this.trailer.key          
+          movieId: this.activeMovie.id.toString()        
         }
       });
     },

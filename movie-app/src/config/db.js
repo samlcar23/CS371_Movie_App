@@ -34,14 +34,10 @@ export function addRent(movieID, uid) {
       var currentDate = new Date();
       var checkDate = startDate;
       checkDate.setHours(startDate.getHours() + 24);
-      if (currentDate <= checkDate) {
-        console.log("within rental period");
-      } else {
-        console.log("after rental date");
+      if (currentDate > checkDate) {
         rentedRef.update({ start: new Date() });
       }
     } else {
-      console.log("path doesn't exist");
       rentedRef.update({ start: new Date() });
     }
   });
@@ -53,10 +49,7 @@ export function classifyRentals(uid) {
   var past = [];
   rentedRef.once("value", function(snapshot) {
     if (snapshot.exists()) {
-      console.log(snapshot);
       var jsonObj = snapshot.toJSON();
-      console.log("classify rentals");
-      console.log(jsonObj);
       var currentDate = new Date();
       Object.keys(jsonObj).forEach(function(key) {
         var startDate = new Date(jsonObj[key].start);

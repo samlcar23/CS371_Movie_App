@@ -21,7 +21,7 @@ export default new Router({
       component: Account
     },
     {
-      path: '/play/:trailerKey',
+      path: '/play/:movieId',
       name: 'play',
       props: true,
       component: Play

@@ -1,20 +1,28 @@
 <template>
   <div>
-    
-      <v-breadcrumbs class="ml-4" :items="navPath" divider=">"></v-breadcrumbs>
-      <v-container fluid grid-list-md class="py-4 mx-0">
-        <v-layout align-center justify-center row fill-height>
-          <div class="frame">
-            <iframe
-              :width="`${window.width - 100}`"
-              :height="`${window.height - 150}`"
-              allowfullscreen="allowfullscreen"
-              :src="`https://www.youtube.com/embed/${trailerKey}?autoplay=1`"
-            ></iframe>
-          </div>
-        </v-layout>
-      </v-container>
-    
+    <v-breadcrumbs class="ml-4" :items="navPath" divider=">"></v-breadcrumbs>
+    <v-container fluid grid-list-md class="py-4 mx-0">
+      <v-layout align-center justify-center row fill-height>
+        <template v-if="$root.activeRentals.includes(parseInt(movieId))">
+          <template v-if="trailer!=null">
+            <div class="frame">
+              <iframe
+                :width="`${window.width - 100}`"
+                :height="`${window.height - 150}`"
+                allowfullscreen="allowfullscreen"
+                :src="`https://www.youtube.com/embed/${trailer.key}?autoplay=1`"
+              ></iframe>
+            </div>
+          </template>
+        </template>
+
+        <template v-else>
+          <v-container text-xs-center>
+            <h2>You are not authorized to view this title.</h2>
+          </v-container>
+        </template>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 
@@ -23,15 +31,15 @@ import router from "../router";
 
 export default {
   props: {
-    trailerKey: {
+    movieId: {
       type: String
     }
   },
 
-
   data() {
     return {
       key: "",
+      trailer: null,
       navPath: [
         {
           text: "Home",
@@ -54,6 +62,11 @@ export default {
     window.addEventListener("resize", this.handleResize);
     this.handleResize();
   },
+
+  mounted() {
+    this.getTrailer(this.movieId);
+  },
+
   destroyed() {
     window.removeEventListener("resize", this.handleResize);
   },
@@ -61,6 +74,19 @@ export default {
     handleResize() {
       this.window.width = window.innerWidth;
       this.window.height = window.innerHeight;
+    },
+
+    getTrailer(id) {
+      fetch(
+        //bbd53a03bcbbff4022afbfd11ffa06a3
+        `https://api.themoviedb.org/3/movie/${id}/videos?api_key=bbd53a03bcbbff4022afbfd11ffa06a3&language=en-US`
+      )
+        .then(r => r.json())
+        .then(u => {
+          this.trailer = u.results.find(function(element) {
+            return element.type == "Trailer";
+          });
+        });
     }
   }
 };

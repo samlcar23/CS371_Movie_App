@@ -125,7 +125,6 @@ export default {
     },
 
     setLogin(result) {
-      console.log(result);
       if (result.user != null) {
         this.$root.user = result.user;
         sessionStorage.user = JSON.stringify(result.user);
