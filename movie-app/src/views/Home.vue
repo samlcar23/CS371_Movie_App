@@ -6,7 +6,7 @@
         <!-- <p>{{nowPlayingMovies[0]}}</p> -->
         <template v-for="(movie, index) in $root.movieList">
           <v-flex :key="index" xs11 sm5 md2 lg2 xl2>
-            <v-card dark color="primary" @click="movieDetails(movie)">
+            <v-card height="100%" dark color="primary" @click="movieDetails(movie)">
               <v-img :src="movie.poster"></v-img>
               <v-card-text>
                 {{movie.title}}
