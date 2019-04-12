@@ -36,8 +36,8 @@
             <v-list>
               <v-list-tile>
                 <v-list-tile-action>
-                  <v-btn flat>
-                    <span class="navButtons" @click="$router.push({ path: `/account` })">My Account</span>
+                  <v-btn flat @click="$router.push({ path: `/account` })">
+                    <span class="navButtons" >My Account</span>
                   </v-btn>
                 </v-list-tile-action>
               </v-list-tile>
