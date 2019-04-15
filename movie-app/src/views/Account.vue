@@ -102,6 +102,7 @@
                 md4
               >
               <v-btn @click="submit">Update</v-btn>
+              <v-btn @click="deletePayment">Delete</v-btn>
               </v-flex>
             </v-layout>
           </v-container>
@@ -122,6 +123,12 @@
      v-else>
       {{ textFail }}
       <v-btn dark flat @click="snackbar = false">Close</v-btn>
+    </v-snackbar>
+    <v-snackbar
+      v-model="snackbarDelete"
+      :timeout="3000">
+      {{ textDelete }}
+      <v-btn dark flat @click="snackbarDelete = false">Close</v-btn>
     </v-snackbar>
       <MoviePopup :movie="selectedMovie"></MoviePopup>
     </v-container>
@@ -149,11 +156,23 @@
 import MoviePopup from "../components/MoviePopup.vue";
 import { login } from "../config/db";
 
-import { updatePayment } from "../config/db.js";
+import { db, updatePayment, deletePayment } from "../config/db.js";
 
 export default {
   mounted() {
     if (this.$root.movieList.length <= 0) this.getNowPlaying();
+    if (this.$root.user != null) {
+      let paymentRef = db.ref().child("users/" + this.$root.user.uid + "/paymentMethod/creditCard/");
+      paymentRef.once("value", snapshot => {
+        if (snapshot.exists()) {
+            this.ccNumber = snapshot.child("number").val();
+            this.ccCSV = snapshot.child("csv").val();
+            this.ccDate = snapshot.child("date").val();
+        } 
+      });
+    } else {
+      console.log("uid is null");
+    }
   },
   components: {
     MoviePopup,
@@ -169,6 +188,13 @@ export default {
         this.success = false;
         this.snackbar = true;
       }
+    },
+    deletePayment() {
+        deletePayment(this.$root.user.uid);
+        this.ccNumber = "";
+        this.ccCSV = "";
+        this.ccDate = "";
+        this.snackbarDelete = true;
     },
     getNowPlaying() {
       fetch(
@@ -206,8 +232,10 @@ export default {
     nowPlaying: [],
     success: false,
     snackbar: false,
+    snackbarDelete: false,
     textSuccess: "Updated Succesfully",
     textFail: "Failed to Update",
+    textDelete: "Payment Method Deleted",
     ccName: "",
     ccCSV: "",
     ccNumber: "",
