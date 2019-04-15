@@ -51,6 +51,11 @@ export function updatePayment(num, csv, date, uid) {
    
 }
 
+export function deletePayment(uid) {
+  let paymentRef = db.ref().child("users/" + uid + "/paymentMethod/");
+  paymentRef.remove();
+}
+
 export function classifyRentals(uid) {
   let rentedRef = db.ref().child("users/" + uid + "/rentals");
   var active = [];

@@ -73,7 +73,7 @@
           </v-card-title>
           <v-divider></v-divider>
           <v-card-text>
-            <p>You don't have a payment method on file.<br>Would you like to add one now?</p>
+            <p>You don't have a valid payment method on file.<br>Would you like to add one now?</p>
           </v-card-text>
           <v-card-actions>
             <v-btn color="primary" flat @click="goToAccount">Yes</v-btn>
@@ -123,23 +123,32 @@ export default {
       paymentRef.once("value", snapshot => {
         if (snapshot.exists()) {
           //Payment method exists
+          //check if not expired
+          var date = snapshot.child("date").val();
+          var currentDate = new Date().toISOString().substring(0, 10);;
 
-          //atomically increments the firebase view counter
-          var r = db.ref("views/" + this.activeMovie.id).child("count");
-          r.transaction(function(currentViews) {
-            return currentViews + 1;
-          });
+          if (date > currentDate) {
+            //atomically increments the firebase view counter
+            var r = db.ref("views/" + this.activeMovie.id).child("count");
+            r.transaction(function(currentViews) {
+              return currentViews + 1;
+            });
 
-          //Add movie to users rented list
-          addRent(this.activeMovie.id, this.$root.user.uid);
+            //Add movie to users rented list
+            addRent(this.activeMovie.id, this.$root.user.uid);
 
-          //navigate to the movie
-          this.$router.push({
-            name: "play",
-            params: {
-              movieId: this.activeMovie.id.toString()
-            }
-          });
+            //navigate to the movie
+            this.$router.push({
+              name: "play",
+              params: {
+                movieId: this.activeMovie.id.toString()
+              }
+            });
+          } else {
+            this.noCardDialog = true;
+          }
+
+          
         } else {
           this.noCardDialog = true;
         }
