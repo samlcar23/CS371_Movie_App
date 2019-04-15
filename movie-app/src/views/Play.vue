@@ -6,7 +6,7 @@
         <template v-if="$root.activeRentals.includes(parseInt(movieId))">
           <template v-if="trailer!=null">
             <div class="frame">
-              <iframe
+              <iframe allow="autoplay"
                 :width="`${window.width - 100}`"
                 :height="`${window.height - 150}`"
                 allowfullscreen="allowfullscreen"

@@ -43,6 +43,14 @@ export function addRent(movieID, uid) {
   });
 }
 
+export function updatePayment(num, csv, date, uid) {
+  let paymentRef = db.ref().child("users/" + uid + "/paymentMethod/creditCard/");
+  paymentRef.update({number: num});
+  paymentRef.update({csv: csv});
+  paymentRef.update({date: date});
+   
+}
+
 export function classifyRentals(uid) {
   let rentedRef = db.ref().child("users/" + uid + "/rentals");
   var active = [];
