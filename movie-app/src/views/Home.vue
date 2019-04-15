@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-breadcrumbs class="ml-4" :items="navPath" divider=">"></v-breadcrumbs>
-    <v-container fluid grid-list-md class="py-4 mx-0">
+    <v-container fluid grid-list-md align-center class="py-4 mx-0">
       <v-layout row wrap justify-center>
         <!-- <p>{{nowPlayingMovies[0]}}</p> -->
         <template v-for="(movie, index) in $root.movieList">
