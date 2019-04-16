@@ -67,20 +67,23 @@
       </v-layout>
     </template>
     <v-dialog v-model="noCardDialog" max-width="500px">
-        <v-card color="grey lighten-2">
-          <v-card-title>
-            <h2>Unable to rent: {{activeMovie.title}}</h2>
-          </v-card-title>
-          <v-divider></v-divider>
-          <v-card-text>
-            <p>You don't have a valid payment method on file.<br>Would you like to add one now?</p>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary" flat @click="goToAccount">Yes</v-btn>
-            <v-btn color="secondary" flat @click="noCardDialog=false">No</v-btn> 
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      <v-card color="grey lighten-2">
+        <v-card-title>
+          <h2>Unable to rent: {{activeMovie.title}}</h2>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <p>
+            You don't have a valid payment method on file.
+            <br>Would you like to add one now?
+          </p>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" flat @click="goToAccount">Yes</v-btn>
+          <v-btn color="secondary" flat @click="noCardDialog=false">No</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-dialog>
 </template>
 
@@ -109,23 +112,23 @@ export default {
     saveLoading: false
   }),
   methods: {
-
     goToAccount() {
       this.$router.push({
-            name: "account",
-          });
+        name: "account"
+      });
     },
-    
+
     rent() {
-      
       //Check for payment method
-      let paymentRef = db.ref().child("users/" + this.$root.user.uid + "/paymentMethod/creditCard/");
+      let paymentRef = db
+        .ref()
+        .child("users/" + this.$root.user.uid + "/paymentMethod/creditCard/");
       paymentRef.once("value", snapshot => {
         if (snapshot.exists()) {
           //Payment method exists
           //check if not expired
           var date = snapshot.child("date").val();
-          var currentDate = new Date().toISOString().substring(0, 10);;
+          var currentDate = new Date().toISOString().substring(0, 10);
 
           if (date > currentDate) {
             //atomically increments the firebase view counter
@@ -147,20 +150,17 @@ export default {
           } else {
             this.noCardDialog = true;
           }
-
-          
         } else {
           this.noCardDialog = true;
         }
       });
-      
     },
 
     watchMovie() {
       this.$router.push({
         name: "play",
         params: {
-          movieId: this.activeMovie.id.toString()        
+          movieId: this.activeMovie.id.toString()
         }
       });
     },

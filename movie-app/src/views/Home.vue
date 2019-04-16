@@ -26,10 +26,8 @@
 </template>
 
 <script>
-
 import WatchCounter from "../components/WatchCounter.vue";
 import MoviePopup from "../components/MoviePopup.vue";
-
 
 export default {
   mounted() {
@@ -44,12 +42,12 @@ export default {
       nowPlaying: [],
       selectedMovie: {},
       navPath: [
-      {
-        text: "Home",
-        disabled: true,
-        to: "/"
-      }
-    ]
+        {
+          text: "Home",
+          disabled: true,
+          to: "/"
+        }
+      ]
     };
   },
   methods: {
@@ -79,8 +77,7 @@ export default {
 
     movieDetails(movie) {
       this.selectedMovie = { ...movie };
-    },
-
+    }
   }
 };
 </script>

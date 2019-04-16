@@ -44,11 +44,12 @@ export function addRent(movieID, uid) {
 }
 
 export function updatePayment(num, csv, date, uid) {
-  let paymentRef = db.ref().child("users/" + uid + "/paymentMethod/creditCard/");
-  paymentRef.update({number: num});
-  paymentRef.update({csv: csv});
-  paymentRef.update({date: date});
-   
+  let paymentRef = db
+    .ref()
+    .child("users/" + uid + "/paymentMethod/creditCard/");
+  paymentRef.update({ number: num });
+  paymentRef.update({ csv: csv });
+  paymentRef.update({ date: date });
 }
 
 export function deletePayment(uid) {
@@ -70,8 +71,7 @@ export function classifyRentals(uid) {
         checkDate.setHours(startDate.getHours() + 24);
         if (currentDate <= checkDate) {
           active.push(parseInt(key));
-        }
-        else{
+        } else {
           past.push(parseInt(key));
         }
       });

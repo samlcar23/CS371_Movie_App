@@ -2,7 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import Vuetify from "vuetify";
-import VueFire from 'vuefire'
+import VueFire from "vuefire";
 import "vuetify/dist/vuetify.min.css";
 require("./assets/style.css");
 

@@ -37,7 +37,7 @@
               <v-list-tile>
                 <v-list-tile-action>
                   <v-btn flat @click="$router.push({ path: `/account` })">
-                    <span class="navButtons" >My Account</span>
+                    <span class="navButtons">My Account</span>
                   </v-btn>
                 </v-list-tile-action>
               </v-list-tile>
@@ -55,9 +55,11 @@
       <v-content>
         <router-view/>
         <br>
-      <v-img position="right center" height="50" contain :src="attributionLogo"></v-img>
-      <span class="attrib">This product uses the TMDb API but is not endorsed or certified by TMDb.</span>
-      <br>
+        <v-img position="right center" height="50" contain :src="attributionLogo"></v-img>
+        <span
+          class="attrib"
+        >This product uses the TMDb API but is not endorsed or certified by TMDb.</span>
+        <br>
       </v-content>
 
       <!-- footer -->
@@ -70,7 +72,6 @@
         <span class="body-1">All Rights Reserved.</span>
         <v-spacer></v-spacer>
       </v-footer>
-
     </div>
   </v-app>
 </template>

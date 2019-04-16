@@ -34,102 +34,81 @@
           </section>
         </v-flex>
       </v-layout>
-      <v-layout row wrap>
-         <v-flex xs12 pt-4>
-      <h2 class="movieDescriptionHeader">Payment Options:</h2>
-    </v-flex>
-      <v-flex xs12 class="py-0">
-        <v-form v-model="valid" ref="form">
-          <v-container>
-            <v-layout>
-              <v-flex
-                xs12
-                md4
-              >
-                <v-text-field
-                  v-model="ccNumber"
-                  :rules="ccRules"
-                  :counter="16"
-                  label="Credit Card Number"
-                  required
-                ></v-text-field>
-              </v-flex>
+      <v-layout row wrap v-if="$root.user != null">
+        <v-flex xs12 pt-4>
+          <h2 class="movieDescriptionHeader">Payment Options:</h2>
+        </v-flex>
+        <v-flex xs12 class="py-0">
+          <v-form v-model="valid" ref="form">
+            <v-container>
+              <v-layout>
+                <v-flex xs12 md4>
+                  <v-text-field
+                    v-model="ccNumber"
+                    :rules="ccRules"
+                    :counter="16"
+                    label="Credit Card Number"
+                    required
+                  ></v-text-field>
+                </v-flex>
 
-              <v-flex
-                xs12
-                md4
-              >
-                <v-text-field
-                  v-model="ccCSV"
-                  :rules="ccCSVRules"
-                  :counter="3"
-                  label="CSV"
-                  required
-                ></v-text-field>
-              </v-flex>
+                <v-flex xs12 md4>
+                  <v-text-field
+                    v-model="ccCSV"
+                    :rules="ccCSVRules"
+                    :counter="3"
+                    label="CSV"
+                    required
+                  ></v-text-field>
+                </v-flex>
 
-              <v-flex
-                xs12
-                md4
-              >
-                <v-menu
-              v-model="menu"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              lazy
-              transition="scale-transition"
-              offset-y
-              full-width
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="ccDate"
-                  label="Expiration Date"
-                  prepend-icon="event"
-                  readonly
-                  v-on="on"
-                  :rules="ccDateRules"
-                  required
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="ccDate" @input="menu = false"></v-date-picker>
-            </v-menu>
-              </v-flex>
+                <v-flex xs12 md4>
+                  <v-menu
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    lazy
+                    transition="scale-transition"
+                    offset-y
+                    full-width
+                    min-width="290px"
+                  >
+                    <template v-slot:activator="{ on }">
+                      <v-text-field
+                        v-model="ccDate"
+                        label="Expiration Date"
+                        prepend-icon="event"
+                        readonly
+                        v-on="on"
+                        :rules="ccDateRules"
+                        required
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker v-model="ccDate" @input="menu = false"></v-date-picker>
+                  </v-menu>
+                </v-flex>
 
-              <v-flex
-                xs12
-                md4
-              >
-              <v-btn @click="submit">Update</v-btn>
-              <v-btn @click="deletePayment">Delete</v-btn>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-form>
-      </v-flex>
+                <v-flex xs12 md4>
+                  <v-btn @click="submit">Update</v-btn>
+                  <v-btn @click="deletePayment">Delete</v-btn>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-form>
+        </v-flex>
       </v-layout>
-      <v-snackbar
-      v-model="snackbar"
-      :timeout="3000"
-      color="success"
-     v-if="success == true">
-      {{ textSuccess }}
-      <v-btn dark flat @click="snackbar = false">Close</v-btn>
-    </v-snackbar>
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="3000"
-     v-else>
-      {{ textFail }}
-      <v-btn dark flat @click="snackbar = false">Close</v-btn>
-    </v-snackbar>
-    <v-snackbar
-      v-model="snackbarDelete"
-      :timeout="3000">
-      {{ textDelete }}
-      <v-btn dark flat @click="snackbarDelete = false">Close</v-btn>
-    </v-snackbar>
+      <v-snackbar v-model="snackbar" :timeout="3000" color="success" v-if="success == true">
+        {{ textSuccess }}
+        <v-btn dark flat @click="snackbar = false">Close</v-btn>
+      </v-snackbar>
+      <v-snackbar v-model="snackbar" :timeout="3000" v-else>
+        {{ textFail }}
+        <v-btn dark flat @click="snackbar = false">Close</v-btn>
+      </v-snackbar>
+      <v-snackbar v-model="snackbarDelete" :timeout="3000">
+        {{ textDelete }}
+        <v-btn dark flat @click="snackbarDelete = false">Close</v-btn>
+      </v-snackbar>
       <MoviePopup :movie="selectedMovie"></MoviePopup>
     </v-container>
   </div>
@@ -162,25 +141,56 @@ export default {
   mounted() {
     if (this.$root.movieList.length <= 0) this.getNowPlaying();
     if (this.$root.user != null) {
-      let paymentRef = db.ref().child("users/" + this.$root.user.uid + "/paymentMethod/creditCard/");
+      let paymentRef = db
+        .ref()
+        .child("users/" + this.$root.user.uid + "/paymentMethod/creditCard/");
       paymentRef.once("value", snapshot => {
         if (snapshot.exists()) {
-            this.ccNumber = snapshot.child("number").val();
-            this.ccCSV = snapshot.child("csv").val();
-            this.ccDate = snapshot.child("date").val();
-        } 
+          this.ccNumber = snapshot.child("number").val();
+          this.ccCSV = snapshot.child("csv").val();
+          this.ccDate = snapshot.child("date").val();
+        }
       });
     } else {
       console.log("uid is null");
     }
   },
   components: {
-    MoviePopup,
+    MoviePopup
   },
-  methods: { 
+
+  computed: {
+    userVal() {
+      return this.$root.user;
+    }
+  },
+
+  watch: {
+    userVal(val) {
+      if (val != null) {
+        let paymentRef = db
+          .ref()
+          .child("users/" + this.$root.user.uid + "/paymentMethod/creditCard/");
+        paymentRef.once("value", snapshot => {
+          if (snapshot.exists()) {
+            this.ccNumber = snapshot.child("number").val();
+            this.ccCSV = snapshot.child("csv").val();
+            this.ccDate = snapshot.child("date").val();
+          }
+        });
+      }
+    }
+  },
+
+  methods: {
     submit() {
       if (this.$refs.form.validate()) {
-        updatePayment(this.ccNumber, this.ccCSV, this.ccDate, this.$root.user.uid);
+        updatePayment(
+          this.ccNumber,
+          this.ccCSV,
+          this.ccDate,
+          this.$root.user.uid
+        );
         //Push to firebase
         this.success = true;
         this.snackbar = true;
@@ -190,11 +200,11 @@ export default {
       }
     },
     deletePayment() {
-        deletePayment(this.$root.user.uid);
-        this.ccNumber = "";
-        this.ccCSV = "";
-        this.ccDate = "";
-        this.snackbarDelete = true;
+      deletePayment(this.$root.user.uid);
+      this.ccNumber = "";
+      this.ccCSV = "";
+      this.ccDate = "";
+      this.snackbarDelete = true;
     },
     getNowPlaying() {
       fetch(
@@ -253,23 +263,23 @@ export default {
       }
     ],
     valid: false,
-      ccRules: [
-        v => !!v || 'Credit Card Number is required',
-        v => v.length == 16 || 'Credit Card Number must be 16 digits'
-      ],
-      emailRules: [
-        v => !!v || 'E-mail is required',
-        v => /.+@.+/.test(v) || 'E-mail must be valid'
-      ],
-      ccCSVRules: [
-        v => !!v || 'CSV is required',
-        v => v.length == 3 || 'CSV must be 3 digits'
-      ],
-      menu: false,
-      ccDateRules: [
-        v => !!v || 'Expiration Date is required',
-        v => v.length == 10 || 'Expiration Date is not valid'
-      ]
+    ccRules: [
+      v => !!v || "Credit Card Number is required",
+      v => v.length == 16 || "Credit Card Number must be 16 digits"
+    ],
+    emailRules: [
+      v => !!v || "E-mail is required",
+      v => /.+@.+/.test(v) || "E-mail must be valid"
+    ],
+    ccCSVRules: [
+      v => !!v || "CSV is required",
+      v => v.length == 3 || "CSV must be 3 digits"
+    ],
+    menu: false,
+    ccDateRules: [
+      v => !!v || "Expiration Date is required",
+      v => v.length == 10 || "Expiration Date is not valid"
+    ]
   })
 };
 </script>
