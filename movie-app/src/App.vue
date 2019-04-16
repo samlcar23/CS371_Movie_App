@@ -54,6 +54,9 @@
       </div>
       <v-content>
         <router-view/>
+        <br>
+      <v-img position="right center" height="50" contain :src="attributionLogo"></v-img>
+      <br>
       </v-content>
 
       <!-- footer -->
@@ -66,6 +69,7 @@
         <span class="body-1">All Rights Reserved.</span>
         <v-spacer></v-spacer>
       </v-footer>
+
     </div>
   </v-app>
 </template>
@@ -73,11 +77,13 @@
 <script>
 import { login, addUser, classifyRentals, db } from "./config/db";
 import firebase from "firebase";
+import logo from "./assets/attributionLogo.png";
 
 export default {
   name: "App",
   data: () => ({
-    timer: null
+    timer: null,
+    attributionLogo: logo
   }),
 
   watch: {},
