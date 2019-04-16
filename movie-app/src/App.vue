@@ -56,6 +56,7 @@
         <router-view/>
         <br>
       <v-img position="right center" height="50" contain :src="attributionLogo"></v-img>
+      <span class="attrib">This product uses the TMDb API but is not endorsed or certified by TMDb.</span>
       <br>
       </v-content>
 
@@ -198,3 +199,10 @@ export default {
   }
 };
 </script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.attrib {
+  float: right;
+  font-size: 8px;
+}
+</style>
