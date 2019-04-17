@@ -151,9 +151,7 @@ export default {
           this.ccDate = snapshot.child("date").val();
         }
       });
-    } else {
-      console.log("uid is null");
-    }
+    } 
   },
   components: {
     MoviePopup

@@ -19,11 +19,14 @@ export function login() {
 
 export function addUser(user) {
   let userRef = db.ref().child("users/" + user.uid);
-  userRef.update({
+  var update = userRef.update({
     uid: user.uid,
     name: user.displayName,
     rentals: []
   });
+  
+  update.then(snapshot => {location.reload()});
+
 }
 
 export function addRent(movieID, uid) {

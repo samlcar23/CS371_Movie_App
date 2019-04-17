@@ -3,7 +3,7 @@
     <v-breadcrumbs class="ml-4" :items="navPath" divider=">"></v-breadcrumbs>
     <v-container fluid grid-list-md class="py-4 mx-0">
       <v-layout align-center justify-center row fill-height>
-        <template v-if="$root.activeRentals.includes(parseInt(movieId))">
+        <template v-if="$root.activeRentals.includes(parseInt(movieId)) && $root.loggedIn">
           <template v-if="trailer!=null">
             <div class="frame">
               <iframe

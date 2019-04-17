@@ -112,19 +112,25 @@ export default {
           .ref()
           .child("users/" + this.$root.user.uid + "/rentals");
         var childListener = rentedRef.on("child_added", snapshot => {
-          var classify = classifyRentals(this.$root.user.uid);
-          this.$root.activeRentals = classify[0];
-          this.$root.pastRentals = classify[1];
+          if (this.$root.user != null) {
+            var classify = classifyRentals(this.$root.user.uid);
+            this.$root.activeRentals = classify[0];
+            this.$root.pastRentals = classify[1];
+          }
         });
         var childListener = rentedRef.on("child_removed", snapshot => {
-          var classify = classifyRentals(this.$root.user.uid);
-          this.$root.activeRentals = classify[0];
-          this.$root.pastRentals = classify[1];
+          if (this.$root.user != null) {
+            var classify = classifyRentals(this.$root.user.uid);
+            this.$root.activeRentals = classify[0];
+            this.$root.pastRentals = classify[1];
+          }
         });
         var childListener = rentedRef.on("child_changed", snapshot => {
-          var classify = classifyRentals(this.$root.user.uid);
-          this.$root.activeRentals = classify[0];
-          this.$root.pastRentals = classify[1];
+          if (this.$root.user != null) {
+            var classify = classifyRentals(this.$root.user.uid);
+            this.$root.activeRentals = classify[0];
+            this.$root.pastRentals = classify[1];
+          }
         });
       }
     } else {
@@ -164,19 +170,25 @@ export default {
             .ref()
             .child("users/" + this.$root.user.uid + "/rentals");
           var childListener = rentedRef.on("child_added", snapshot => {
-            var classify = classifyRentals(this.$root.user.uid);
-            this.$root.activeRentals = classify[0];
-            this.$root.pastRentals = classify[1];
+            if (this.$root.user != null) {
+              var classify = classifyRentals(this.$root.user.uid);
+              this.$root.activeRentals = classify[0];
+              this.$root.pastRentals = classify[1];
+            }
           });
           var childListener = rentedRef.on("child_removed", snapshot => {
-            var classify = classifyRentals(this.$root.user.uid);
-            this.$root.activeRentals = classify[0];
-            this.$root.pastRentals = classify[1];
+            if (this.$root.user != null) {
+              var classify = classifyRentals(this.$root.user.uid);
+              this.$root.activeRentals = classify[0];
+              this.$root.pastRentals = classify[1];
+            }
           });
           var childListener = rentedRef.on("child_changed", snapshot => {
-            var classify = classifyRentals(this.$root.user.uid);
-            this.$root.activeRentals = classify[0];
-            this.$root.pastRentals = classify[1];
+            if (this.$root.user != null) {
+              var classify = classifyRentals(this.$root.user.uid);
+              this.$root.activeRentals = classify[0];
+              this.$root.pastRentals = classify[1];
+            }
           });
         }
       }
@@ -193,6 +205,8 @@ export default {
       if (error != undefined) console.log(result);
       else {
         this.$root.user = null;
+        this.$root.activeRentals = [];
+        this.$root.pastRentals = [];
         this.$root.loggedIn = false;
         sessionStorage.removeItem("user");
       }
